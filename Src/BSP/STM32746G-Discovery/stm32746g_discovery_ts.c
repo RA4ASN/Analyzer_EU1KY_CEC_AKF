@@ -146,6 +146,7 @@ uint8_t BSP_TS_Init(uint16_t ts_SizeX, uint16_t ts_SizeY)
   tsXBoundary = ts_SizeX;
   tsYBoundary = ts_SizeY;
 
+#if TOUCH_FT5336
   /* Read ID and verify if the touch screen driver is ready */
   ft5336_ts_drv.Init(TS_I2C_ADDRESS);
   if(ft5336_ts_drv.ReadID(TS_I2C_ADDRESS) == FT5336_ID_VALUE)
@@ -162,6 +163,23 @@ uint8_t BSP_TS_Init(uint16_t ts_SizeX, uint16_t ts_SizeY)
   {
     status = TS_DEVICE_NOT_FOUND;
   }
+#elif TOUCH_GT911
+  gt911_ts_drv.Init(GOODIX_I2C_ADDR_BA);
+  if(gt911_ts_drv.ReadID(GOODIX_I2C_ADDR_BA) == GT911_ID)
+  {
+    tsDriver = & gt911_ts_drv;
+    I2cAddress = GOODIX_I2C_ADDR_BA;
+    tsOrientation = TS_SWAP_NONE;
+ //   DBG_Printf("gt911 ok\n");
+    /* Initialize the TS driver */
+    tsDriver->Start(I2cAddress);
+  }
+    else
+  {
+    status = TS_DEVICE_NOT_FOUND;
+//   DBG_Printf("gt911 error\n");
+  }
+#endif /* TOUCH_FT5336 */
 
   return status;
 }

@@ -25,6 +25,8 @@ int DBG_Printf(const char *fmt, ...);
 #define SI5351_USE_I2C3	1
 #define NO_LOGO_NO_WAIT 1
 //#define WITH_RTC        1
+#define TOUCH_FT5336    1
+//#define TOUCH_GT911     1
 
 #define DatumDDMMYYYY false
 

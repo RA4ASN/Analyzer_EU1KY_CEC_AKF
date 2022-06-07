@@ -893,6 +893,33 @@ uint8_t TS_IO_Read(uint8_t Addr, uint8_t Reg)
   return read_value;
 }
 
+void TS_IO_Write_buf(uint8_t Addr, uint8_t * buf, uint8_t len)
+{
+  HAL_StatusTypeDef res;
+  uint32_t tries = 0;
+  do
+  {
+    res = HAL_I2C_Master_Transmit(&hI2cAudioHandler, Addr, buf, len, 1000);
+    if (HAL_OK != res)
+        TS_IO_Delay(2);
+  } while ((HAL_OK != res) && (++tries < 6));
+  //DBG_Printf("HAL_I2C_Master_Transmit: %d\n", res);
+}
+
+void TS_IO_Read_buf(uint8_t Addr, uint8_t * buf, uint8_t len)
+{
+  HAL_StatusTypeDef res;
+  uint32_t tries = 0;
+  do
+  {
+    res = HAL_I2C_Master_Receive(&hI2cAudioHandler, Addr, buf, len, 1000);
+    //res = I2Cx_ReadMultiple(&hI2cAudioHandler, Addr, Reg, I2C_MEMADD_SIZE_16BIT, buf, len);
+    if (HAL_OK != res)
+        TS_IO_Delay(2);
+  } while ((HAL_OK != res) && (++tries < 6));
+  //DBG_Printf("HAL_I2C_Master_Receive: %d\n", res);
+}
+
 /**
   * @brief  TS delay
   * @param  Delay: Delay in ms

@@ -172,7 +172,7 @@ void ft5336_Reset(uint16_t DeviceAddr)
   * @param  DeviceAddr: I2C FT5336 Slave address.
   * @retval The Device ID (two bytes).
   */
-uint16_t ft5336_ReadID(uint16_t DeviceAddr)
+uint32_t ft5336_ReadID(uint16_t DeviceAddr)
 {
   volatile uint8_t ucReadId = 0;
   uint8_t nbReadAttempts = 0;

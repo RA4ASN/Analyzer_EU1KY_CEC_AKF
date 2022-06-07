@@ -44,7 +44,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdint.h> 
+#include <stdint.h>
 
 /** @addtogroup BSP
   * @{
@@ -53,7 +53,7 @@
 /** @addtogroup Components
   * @{
   */
-    
+
 /** @addtogroup TS
   * @{
   */
@@ -66,9 +66,9 @@
   * @{
   */
 typedef struct
-{  
+{
   void       (*Init)(uint16_t);
-  uint16_t   (*ReadID)(uint16_t);
+  uint32_t   (*ReadID)(uint16_t);
   void       (*Reset)(uint16_t);
   void       (*Start)(uint16_t);
   uint8_t    (*DetectTouch)(uint16_t);
