@@ -58,6 +58,12 @@ extern void CAMERA_Delay(uint32_t delay);
 extern void CAMERA_IO_WriteBulk(uint8_t addr, uint8_t reg, uint8_t *values, uint16_t nvalues);
 extern void Sleep(uint32_t);
 
+extern void TS_IO_WriteBulk(uint8_t Addr, uint8_t Reg, uint8_t* Values, uint16_t nValues);
+extern void TS_IO_Write(uint8_t Addr, uint8_t Reg, uint8_t Value);
+extern uint8_t TS_IO_Read(uint8_t Addr, uint8_t Reg);
+extern void TS_IO_Init(void);
+
+
 uint8_t CLK2_drive = 3; // 8 mA
 
 /******************************/
@@ -73,6 +79,7 @@ uint8_t CLK2_drive = 3; // 8 mA
 void si5351_Init(void)
 {
     CAMERA_IO_Init();
+    TS_IO_Init();
 
     CLK2_drive = 3; // 8 mA
 
@@ -444,19 +451,31 @@ static void set_multisynth_alt(uint32_t freq, enum si5351_clock clk)
 
 static uint8_t si5351_write_bulk(uint8_t addr, uint8_t bytes, uint8_t *data)
 {
+#if defined (SI5351_USE_I2C3)
+    TS_IO_WriteBulk(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data, (uint16_t)bytes);
+#else
     CAMERA_IO_WriteBulk(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data, (uint16_t)bytes);
+#endif
     return 0;
 }
 
 static uint8_t si5351_write(uint8_t addr, uint8_t data)
 {
+#if defined (SI5351_USE_I2C3)
+    TS_IO_Write(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data);
+#else
     CAMERA_IO_Write(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data);
+#endif
     return 0;
 }
 
 static uint8_t si5351_read(uint8_t addr, uint8_t *data)
 {
+#if defined (SI5351_USE_I2C3)
+    *data = TS_IO_Read(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr);
+#else
     *data = CAMERA_IO_Read(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr);
+#endif
     return 0;
 }
 
@@ -491,7 +510,7 @@ static uint8_t si5351_detect_address(void)
     uint8_t addr = 2;
     while (1)
     {
-        uint8_t data = CAMERA_IO_Read(addr, 0);
+        uint8_t data = si5351_read(addr, 0);
         if (data != 0xFF && data != 0)
             break; //Should be 0x10 - LOS bit is set
         addr += 2;

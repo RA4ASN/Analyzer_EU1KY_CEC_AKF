@@ -22,6 +22,8 @@ int DBG_Printf(const char *fmt, ...);
 
 /*bool DatumDDMMYYYY = true; */
 
+#define SI5351_USE_I2C3	1
+
 #define DatumDDMMYYYY false
 
 //#define BAND_FMIN 500000ul    //BAND_FMIN must be multiple 100000

@@ -866,6 +866,11 @@ void TS_IO_Write(uint8_t Addr, uint8_t Reg, uint8_t Value)
   } while ((HAL_OK != res) && (++tries < 6));
 }
 
+void TS_IO_WriteBulk(uint8_t Addr, uint8_t Reg, uint8_t* Values, uint16_t nValues)
+{
+  I2Cx_WriteMultiple(&hI2cAudioHandler, Addr, (uint16_t)Reg, I2C_MEMADD_SIZE_8BIT, Values, nValues);
+}
+
 /**
   * @brief  Reads a single data.
   * @param  Addr: I2C address

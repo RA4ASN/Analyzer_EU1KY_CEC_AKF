@@ -53,35 +53,49 @@ extern void CAMERA_Delay(uint32_t delay);
 extern void CAMERA_IO_WriteBulk(uint8_t addr, uint8_t reg, uint8_t *values, uint16_t nvalues);
 extern void Sleep(uint32_t);
 
+extern void TS_IO_WriteBulk(uint8_t Addr, uint8_t Reg, uint8_t* Values, uint16_t nValues);
+extern void TS_IO_Write(uint8_t Addr, uint8_t Reg, uint8_t Value);
+extern uint8_t TS_IO_Read(uint8_t Addr, uint8_t Reg);
+
 //=================================================
 //User Implemention function
 //You must create two I2C-related functions for your device.
 //The two below are examples of that.
 //-------------------------------------------------
-extern uint8_t SI5351_HS_Write(uint8_t addr, uint8_t data);
-extern uint8_t SI5351_HS_WriteN(uint8_t addr, uint8_t bytes, uint8_t *data);
+
 uint8_t SI5351_HS_Write(uint8_t addr, uint8_t data)
 {
 	//CAMERA_IO_Write(0xC0, addr, data);
+#if defined (SI5351_USE_I2C3)
+	TS_IO_Write(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data);
+#else
 	CAMERA_IO_Write(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data);
+#endif
 	return 0;
 }
 
 uint8_t SI5351_HS_WriteN(uint8_t addr, uint8_t bytes, uint8_t *data)
 {
 	//CAMERA_IO_WriteN(0xC0, addr, data, bytes);
-	CAMERA_IO_WriteBulk(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data, (uint16_t)bytes);
-
+#if defined (SI5351_USE_I2C3)
+	TS_IO_WriteBulk(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data, (uint16_t)bytes);
+#else
+    CAMERA_IO_WriteBulk(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr, data, (uint16_t)bytes);
+#endif
 	return 0;
 }
 
-/*
+
 uint8_t SI5351_HS_Read(uint8_t addr, uint8_t *data)
 {
-	*data = CAMERA_IO_Read(0xC0, addr);
+#if defined (SI5351_USE_I2C3)
+    *data = TS_IO_Read(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr);
+#else
+	*data = CAMERA_IO_Read(CFG_GetParam(CFG_PARAM_SI5351_BUS_BASE_ADDR), addr);
+#endif
 	return 0;
 }
-*/
+
 //==================================================
 //Registor Mirror
 //--------------------------------------------------
