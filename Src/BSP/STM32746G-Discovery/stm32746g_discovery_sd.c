@@ -174,7 +174,7 @@ uint8_t BSP_SD_Init(void)
   if(sd_state == MSD_OK)
   {
     /* Enable wide operation */
-    if(HAL_SD_WideBusOperation_Config(&uSdHandle, SDMMC_BUS_WIDE_4B) != SD_OK)
+    if(HAL_SD_WideBusOperation_Config(&uSdHandle, uSdHandle.Init.BusWide) != SD_OK)
     {
       sd_state = MSD_ERROR;
     }
