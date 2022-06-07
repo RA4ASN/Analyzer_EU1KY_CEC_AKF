@@ -23,6 +23,8 @@ int DBG_Printf(const char *fmt, ...);
 /*bool DatumDDMMYYYY = true; */
 
 #define SI5351_USE_I2C3	1
+#define NO_LOGO_NO_WAIT 1
+//#define WITH_RTC        1
 
 #define DatumDDMMYYYY false
 

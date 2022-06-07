@@ -141,11 +141,14 @@ int main(void)
 
     CAMERA_IO_Init(); // I2C connection
     Sleep(50);
+#ifdef WITH_RTC
     getTime(&time, &second, &AMPM, 0);
     getDate(&date);
+#endif /* WITH_RTC */
 
     shell_init("ch"); // Initialize shell with ChibiOS-like command prompt (for NanoVNA protocol)
 
+#ifndef NO_LOGO_NO_WAIT
 #ifndef _DEBUG_UART
     if (ShowLogo() == -1)                                               // no logo.bmp or logo.png file found:
         LCD_DrawBitmap(LCD_MakePoint(90, 24), logo_bmp, logo_bmp_size); // show original logo
@@ -157,6 +160,7 @@ int main(void)
         if (TOUCH_IsPressed())
             break;
     }
+#endif /* NO_LOGO_NO_WAIT */
 
     //TODO : Remove comment before Release / by KD8CEC
     //Sleep (3000);
@@ -176,6 +180,8 @@ int main(void)
     if (0 == CFG_GetParam(CFG_PARAM_Fatlines))
         FatLines = false;
     BeepOn1 = CFG_GetParam(CFG_PARAM_BeepOn);
+
+ #ifdef WITH_RTC
     getTime(&time1, &second1, &AMPM1, 0);
     // second=second1;//      ************************** TEST without RTC
     getDate(&date1);
@@ -189,6 +195,10 @@ int main(void)
     }
     else
         RTCpresent = 1;
+#else
+    NoDate = 1;
+    RTCpresent = 0;
+#endif /* WITH_RTC */
     //  RTCpresent=false;//   ************************** TEST
     //Run main window function
 
