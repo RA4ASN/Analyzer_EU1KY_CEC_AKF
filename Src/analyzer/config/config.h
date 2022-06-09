@@ -22,11 +22,11 @@ int DBG_Printf(const char *fmt, ...);
 
 /*bool DatumDDMMYYYY = true; */
 
-#define SI5351_USE_I2C3	1
-#define NO_LOGO_NO_WAIT 1
-//#define WITH_RTC        1
-#define TOUCH_FT5336    1
-//#define TOUCH_GT911     1
+#define SI5351_USE_I2C3	1       // перенос si5351 на i2c3 в случае неисправности портов i2c1
+#define NO_LOGO_NO_WAIT 1       // ускорение запуска прибора за счет отключения показа логотипа и ожидания нажатий
+//#define WITH_RTC        1     // если физически отсутствует rtc, запуск прибора происходит дольше из-за попыток олбращения к rtc
+#define TOUCH_FT5336    1       // контроллер тачскрина штатный - FT5336
+//#define TOUCH_GT911     1     // контроллер тачскрина Goodix GT911
 
 #define DatumDDMMYYYY false
 
